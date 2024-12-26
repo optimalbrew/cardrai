@@ -135,11 +135,11 @@ const Calculator = () => {
     valueMappingFluidBal[i] = valueMappingFluidBal["55"];
   }
   //and treat values in above mapping between 66 and 75 as 65
-  for (let i = 61; i < 65; i++) {
+  for (let i = 66; i < 75; i++) {
     valueMappingFluidBal[i] = valueMappingFluidBal["65"];
   }
 
-  //Age points
+  //CBP duration points
   const valueMappingCBP = {
     option1: 0,
     option2: 24,
