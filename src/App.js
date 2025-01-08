@@ -13,118 +13,17 @@ const Calculator = () => {
   //result of the calculation
   const [result, setResult] = useState(null); //the cumulative points
  // const [risk, setRisk] = useState(null); //the estimated risk
-
-  //Age points
-  const valueMappingAge = {
-    "Less than 3 months": 52,
-    "3-24 months": 27,
-    "More than 24 months": 0,
-  };
-
-  //STAT score points
-  const valueMappingStat = {
-    "1": 0,
-    "2": 33,
-    "3": 53,
-    "4": 65,
-    "5": 96,
-    "Unknown": 87,
-  }; 
-
-  //STAT score points .. these are not linear and the input values jump at the end of the range
-  let valueMappingVIS = {
-    0: 0,
-    1: 11,
-    2: 22,
-    3: 33,
-    4: 44,
-    5: 55,
-    6: 65,
-    7: 74,
-    8: 81,
-    9: 87,
-    10: 92,
-    11: 95,
-    12: 97,
-    13: 99,
-    14: 100,
-    15: 100,
-    20: 99,
-    25: 98,
-    30: 97,
-  };
-
-  //Fluid balance points
-  let valueMappingFluidBal = {
-    0: 0,
-    5: 0,
-    10: 1,
-    15: 2,
-    20: 4,
-    25: 5,
-    30: 7,
-    35: 9,
-    40: 11,
-    45: 13,
-    50: 15,
-    55: 17,
-    65: 21,
-    75: 26,
-  }
-
   
-
-  //CBP duration points
-  const valueMappingCBP = {
-    "Less than 180 minutes": 0,
-    "More than 180 minutes": 24,
-    "Unknown": 58,
-  };
-
-
-  // results table
-  const pointsTable = {
-    0: 0,
-    50: 0.01,
-    109: 0.05,
-    136: 0.1,
-    165: 0.2,
-    201: 0.4,
-    230: 0.6,
-    265: 0.8,
-    294: 0.9,
-    321: 0.95,
-  }
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const mappedValueAge = valueMappingAge[Age] || 0;
-    const mappedValueStat = valueMappingStat[Stat] || 0;
-    
-    const parsedKeyVIS8 = parseInt(VIS8Hr, 10);  
-
-    //if parsedkey is not in the keys for valuemappingVIS8, find the largest key that is less than parsedkey
-    let intVIS8 = 0;
-    for (let key in valueMappingVIS) {
-      if (parsedKeyVIS8 >= key) {
-        intVIS8 = valueMappingVIS[key];
-      }
-    }  
-
-    //do the same for fluid balance
-    const parsedKeyFBal = parseInt(FluidBal, 10);  
-    let intFluidBal = 0;
-    for (let key in valueMappingFluidBal) {
-      if (parsedKeyFBal >= key) {
-        intFluidBal = valueMappingFluidBal[key];
-      }
-    }
-
-    const mappedValueCBP = valueMappingCBP[CBP] || 0;
-
-    const calculationResult = mappedValueAge + mappedValueStat + intVIS8 + intFluidBal + mappedValueCBP;
+    const calculationResult = calculateRisk(
+      Age, 
+      Stat,
+      VIS8Hr, 
+      FluidBal, 
+      CBP) 
     setResult(calculationResult);
   };
 
@@ -342,3 +241,120 @@ const Calculator = () => {
 };
 
 export default Calculator;
+
+ //parse input values and calculate the total points
+ export const calculateRisk = (
+  Age, 
+  Stat,
+  VIS8Hr, 
+  FluidBal, 
+  CBP
+) => {
+
+  const mappedValueAge = valueMappingAge[Age] || 0;
+    const mappedValueStat = valueMappingStat[Stat] || 0;
+    
+    const parsedKeyVIS8 = parseInt(VIS8Hr, 10);  
+
+    //if parsedkey is not in the keys for valuemappingVIS8, find the largest key that is less than parsedkey
+    let intVIS8 = 0;
+    for (let key in valueMappingVIS) {
+      if (parsedKeyVIS8 >= key) {
+        intVIS8 = valueMappingVIS[key];
+      }
+    }  
+
+    //do the same for fluid balance
+    const parsedKeyFBal = parseInt(FluidBal, 10);  
+    let intFluidBal = 0;
+    for (let key in valueMappingFluidBal) {
+      if (parsedKeyFBal >= key) {
+        intFluidBal = valueMappingFluidBal[key];
+      }
+    }
+
+    const mappedValueCBP = valueMappingCBP[CBP] || 0;
+
+    return mappedValueAge + mappedValueStat + intVIS8 + intFluidBal + mappedValueCBP;
+}
+
+  //Age points
+  export const valueMappingAge = {
+    "Less than 3 months": 52,
+    "3-24 months": 27,
+    "More than 24 months": 0,
+  };
+
+  //STAT score points
+  export const valueMappingStat = {
+    "1": 0,
+    "2": 33,
+    "3": 53,
+    "4": 65,
+    "5": 96,
+    "Unknown": 87,
+  }; 
+
+  //STAT score points .. these are not linear and the input values jump at the end of the range
+  export const valueMappingVIS = {
+    0: 0,
+    1: 11,
+    2: 22,
+    3: 33,
+    4: 44,
+    5: 55,
+    6: 65,
+    7: 74,
+    8: 81,
+    9: 87,
+    10: 92,
+    11: 95,
+    12: 97,
+    13: 99,
+    14: 100,
+    15: 100,
+    20: 99,
+    25: 98,
+    30: 97,
+  };
+
+  //Fluid balance points
+  export const valueMappingFluidBal = {
+    0: 0,
+    5: 0,
+    10: 1,
+    15: 2,
+    20: 4,
+    25: 5,
+    30: 7,
+    35: 9,
+    40: 11,
+    45: 13,
+    50: 15,
+    55: 17,
+    65: 21,
+    75: 26,
+  }
+
+
+  //CBP duration points
+  export const valueMappingCBP = {
+    "Less than 180 minutes": 0,
+    "More than 180 minutes": 24,
+    "Unknown": 58,
+  };
+
+  // results table
+  export const pointsTable = {
+    0: 0,
+    50: 0.01,
+    109: 0.05,
+    136: 0.1,
+    165: 0.2,
+    201: 0.4,
+    230: 0.6,
+    265: 0.8,
+    294: 0.9,
+    321: 0.95,
+  }
+
